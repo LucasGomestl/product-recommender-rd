@@ -62,7 +62,7 @@ yarn dev
 | `yarn dev` | Inicia frontend + backend juntos |
 | `yarn start:frontend` | Somente a aplicação React |
 | `yarn start:backend` | Somente o json-server |
-| `yarn workspace frontend test` | Executa os testes |
+| `cd frontend && yarn test --watchAll=false` | Executa os testes |
 
 ## Testes
 
@@ -76,8 +76,8 @@ yarn dev
 | `MultiSelectAutocomplete` | 10 — placeholder, abertura, filtro, estado vazio, seleção, tags, remoção, Backspace, Escape, Enter |
 
 ```bash
-yarn workspace frontend test
-```
+cd frontend && yarn test --watchAll=false
+``` 
 
 ## Arquitetura
 
@@ -94,16 +94,6 @@ App
 │   └── RecommendationType      → pill-buttons SingleProduct / MultipleProducts
 └── RecommendationList → exibe os produtos retornados
 ```
-
-## Critérios de aceite
-
-- [x] Receber preferências do usuário via formulário
-- [x] Retornar recomendações baseadas nas preferências
-- [x] Modo SingleProduct: retornar o produto com maior pontuação
-- [x] Modo MultipleProducts: retornar lista de produtos com ao menos 1 ponto
-- [x] Em caso de empate, retornar o último produto válido
-- [x] Lidar com diferentes tipos de preferências e funcionalidades
-- [x] Serviço modular e extensível (strategies map, desacoplado da UI)
 
 ## Autor
 
