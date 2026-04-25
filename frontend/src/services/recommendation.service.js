@@ -39,4 +39,6 @@ const getRecommendations = (
   return strategy(scoredProducts);
 };
 
-export default { getRecommendations };
+const recommendationService = { getRecommendations };
+
+export default recommendationService;
