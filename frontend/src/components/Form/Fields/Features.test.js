@@ -4,15 +4,15 @@ import Features from './Features';
 const mockFeatures = ['Feature A', 'Feature B', 'Feature C'];
 
 describe('Features', () => {
-  test('should check all checkboxes when "Marcar todos" is clicked', () => {
+  test('should show all features as tags when "Marcar todos" is clicked', () => {
     render(
       <Features features={mockFeatures} onFeatureChange={jest.fn()} />
     );
 
     fireEvent.click(screen.getByText('Marcar todos'));
 
-    screen.getAllByRole('checkbox').forEach((checkbox) => {
-      expect(checkbox).toBeChecked();
+    mockFeatures.forEach((f) => {
+      expect(screen.getByLabelText(`Remover ${f}`)).toBeInTheDocument();
     });
   });
 
@@ -27,7 +27,7 @@ describe('Features', () => {
     expect(onFeatureChange).toHaveBeenCalledWith(mockFeatures);
   });
 
-  test('should uncheck all checkboxes when "Limpar tudo" is clicked', () => {
+  test('should remove all tags when "Limpar tudo" is clicked', () => {
     render(
       <Features
         features={mockFeatures}
@@ -38,8 +38,8 @@ describe('Features', () => {
 
     fireEvent.click(screen.getByText('Limpar tudo'));
 
-    screen.getAllByRole('checkbox').forEach((checkbox) => {
-      expect(checkbox).not.toBeChecked();
+    mockFeatures.forEach((f) => {
+      expect(screen.queryByLabelText(`Remover ${f}`)).not.toBeInTheDocument();
     });
   });
 

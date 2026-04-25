@@ -1,17 +1,8 @@
 import React, { useState } from 'react';
-import Checkbox from '../../shared/Checkbox';
+import MultiSelectAutocomplete from '../../shared/MultiSelectAutocomplete';
 
 function Features({ features, selectedFeatures = [], onFeatureChange }) {
   const [currentFeatures, setCurrentFeatures] = useState(selectedFeatures)
-
-  const handleFeatureChange = (feature) => {
-    const updatedFeatures = currentFeatures.includes(feature)
-      ? currentFeatures.filter((pref) => pref !== feature)
-      : [...currentFeatures, feature];
-
-    setCurrentFeatures(updatedFeatures);
-    onFeatureChange(updatedFeatures);
-  };
 
   const handleSelectAll = () => {
     const allFeatures = [...features];
@@ -47,20 +38,15 @@ function Features({ features, selectedFeatures = [], onFeatureChange }) {
           </button>
         </div>
       </div>
-      <ul>
-        {features.map((feature, index) => (
-          <li key={index} className="mb-2">
-            <Checkbox
-              value={feature}
-              checked={currentFeatures.includes(feature)}
-              onChange={() => handleFeatureChange(feature)}
-              className="text-green-500"
-            >
-              {feature}
-            </Checkbox>
-          </li>
-        ))}
-      </ul>
+      <MultiSelectAutocomplete
+        options={features}
+        selected={currentFeatures}
+        onChange={(updated) => {
+          setCurrentFeatures(updated);
+          onFeatureChange(updated);
+        }}
+        placeholder="Selecione funcionalidades..."
+      />
     </div>
   );
 }

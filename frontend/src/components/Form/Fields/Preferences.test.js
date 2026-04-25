@@ -4,15 +4,15 @@ import Preferences from './Preferences';
 const mockPreferences = ['Preference A', 'Preference B', 'Preference C'];
 
 describe('Preferences', () => {
-  test('should check all checkboxes when "Marcar todos" is clicked', () => {
+  test('should show all preferences as tags when "Marcar todos" is clicked', () => {
     render(
       <Preferences preferences={mockPreferences} onPreferenceChange={jest.fn()} />
     );
 
     fireEvent.click(screen.getByText('Marcar todos'));
 
-    screen.getAllByRole('checkbox').forEach((checkbox) => {
-      expect(checkbox).toBeChecked();
+    mockPreferences.forEach((p) => {
+      expect(screen.getByLabelText(`Remover ${p}`)).toBeInTheDocument();
     });
   });
 
@@ -27,7 +27,7 @@ describe('Preferences', () => {
     expect(onPreferenceChange).toHaveBeenCalledWith(mockPreferences);
   });
 
-  test('should uncheck all checkboxes when "Limpar tudo" is clicked', () => {
+  test('should remove all tags when "Limpar tudo" is clicked', () => {
     render(
       <Preferences
         preferences={mockPreferences}
@@ -38,8 +38,8 @@ describe('Preferences', () => {
 
     fireEvent.click(screen.getByText('Limpar tudo'));
 
-    screen.getAllByRole('checkbox').forEach((checkbox) => {
-      expect(checkbox).not.toBeChecked();
+    mockPreferences.forEach((p) => {
+      expect(screen.queryByLabelText(`Remover ${p}`)).not.toBeInTheDocument();
     });
   });
 

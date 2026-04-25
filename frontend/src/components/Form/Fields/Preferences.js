@@ -1,7 +1,7 @@
 // Preferences.js
 
 import React, { useState } from 'react';
-import Checkbox from '../../shared/Checkbox';
+import MultiSelectAutocomplete from '../../shared/MultiSelectAutocomplete';
 
 function Preferences({
   preferences,
@@ -9,15 +9,6 @@ function Preferences({
   onPreferenceChange,
 }) {
   const [currentPreferences, setCurrentPreferences] = useState(selectedPreferences)
-
-  const handlePreferenceChange = (preference) => {
-    const updatedPreferences = currentPreferences.includes(preference)
-      ? currentPreferences.filter((pref) => pref !== preference)
-      : [...currentPreferences, preference];
-
-    setCurrentPreferences(updatedPreferences);
-    onPreferenceChange(updatedPreferences);
-  };
 
   const handleSelectAll = () => {
     const allPreferences = [...preferences];
@@ -53,20 +44,15 @@ function Preferences({
           </button>
         </div>
       </div>
-      <ul>
-        {preferences.map((preference, index) => (
-          <li key={index} className="mb-2">
-            <Checkbox
-              value={preference}
-              checked={currentPreferences.includes(preference)}
-              onChange={() => handlePreferenceChange(preference)}
-              className="text-blue-500"
-            >
-              {preference}
-            </Checkbox>
-          </li>
-        ))}
-      </ul>
+      <MultiSelectAutocomplete
+        options={preferences}
+        selected={currentPreferences}
+        onChange={(updated) => {
+          setCurrentPreferences(updated);
+          onPreferenceChange(updated);
+        }}
+        placeholder="Selecione preferências..."
+      />
     </div>
   );
 }
