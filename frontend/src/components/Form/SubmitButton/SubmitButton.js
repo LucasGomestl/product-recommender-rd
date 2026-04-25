@@ -1,10 +1,11 @@
 import React from 'react';
 
-function SubmitButton({ text }) {
+function SubmitButton({ text, disabled = false }) {
   return (
     <button
       type="submit"
-      className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors"
+      disabled={disabled}
+      className="w-full bg-blue-500 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-colors"
     >
       {text}
     </button>

@@ -8,7 +8,7 @@ import useForm from '../../hooks/useForm';
 import useRecommendations from '../../hooks/useRecommendations';
 
 function Form({ onRecommendationsChange }) {
-  const { preferences, features, products } = useProducts();
+  const { preferences, features, products, loading, error } = useProducts();
   const { formData, handleChange } = useForm({
     selectedPreferences: [],
     selectedFeatures: [],
@@ -22,6 +22,14 @@ function Form({ onRecommendationsChange }) {
     const dataRecommendations = getRecommendations(formData);
     onRecommendationsChange(dataRecommendations);
   };
+
+  if (error) {
+    return (
+      <div className="text-red-700 bg-red-50 border border-red-200 rounded-lg p-4 text-sm">
+        Não foi possível carregar as opções. Tente novamente mais tarde.
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -43,7 +51,10 @@ function Form({ onRecommendationsChange }) {
           handleChange('selectedRecommendationType', selected)
         }
       />
-      <SubmitButton text="Obter recomendação" />
+      <SubmitButton
+        text={loading ? 'Carregando...' : 'Obter recomendação'}
+        disabled={loading}
+      />
     </form>
   );
 }
