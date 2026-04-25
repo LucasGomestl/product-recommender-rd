@@ -1,3 +1,18 @@
+const strategies = {
+  SingleProduct: (scoredProducts) => {
+    const maxScore = Math.max(...scoredProducts.map(({ score }) => score));
+    if (maxScore === 0) return [];
+    const winner = [...scoredProducts]
+      .reverse()
+      .find(({ score }) => score === maxScore);
+    return [winner.product];
+  },
+  MultipleProducts: (scoredProducts) =>
+    scoredProducts
+      .filter(({ score }) => score >= 1)
+      .map(({ product }) => product),
+};
+
 const getRecommendations = (
   formData = { selectedPreferences: [], selectedFeatures: [] },
   products
@@ -15,18 +30,13 @@ const getRecommendations = (
     return { product, score: preferenceScore + featureScore };
   });
 
-  if (formData.selectedRecommendationType === 'SingleProduct') {
-    const maxScore = Math.max(...scoredProducts.map(({ score }) => score));
-    if (maxScore === 0) return [];
-    const winner = [...scoredProducts]
-      .reverse()
-      .find(({ score }) => score === maxScore);
-    return [winner.product];
+  const strategy = strategies[formData.selectedRecommendationType];
+  if (!strategy) {
+    throw new Error(
+      `Unknown recommendation type: ${formData.selectedRecommendationType}`
+    );
   }
-
-  return scoredProducts
-    .filter(({ score }) => score >= 1)
-    .map(({ product }) => product);
+  return strategy(scoredProducts);
 };
 
 export default { getRecommendations };

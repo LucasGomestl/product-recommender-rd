@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Form from './components/Form/Form';
 import RecommendationList from './components/RecommendationList/RecommendationList';
+import useProducts from './hooks/useProducts';
+import useRecommendations from './hooks/useRecommendations';
 
 function App() {
-  const [recommendations, setRecommendations] = useState([]);
-
-  const handleRecommendationsChange = (newRecommendations) => {
-    setRecommendations(newRecommendations);
-  };
+  const { preferences, features, products, loading, error } = useProducts();
+  const { recommendations, submitForm } = useRecommendations(products);
 
   return (
     <div className="bg-gray-100 min-h-screen py-6 px-4 flex flex-col items-center">
@@ -22,7 +21,13 @@ function App() {
           </p>
         </div>
         <div className="border-b border-gray-100 pb-6 md:border-b-0 md:pb-0 md:border-r md:pr-8">
-          <Form onRecommendationsChange={handleRecommendationsChange} />
+          <Form
+            preferences={preferences}
+            features={features}
+            loading={loading}
+            error={error}
+            onSubmit={submitForm}
+          />
         </div>
         <div>
           <RecommendationList recommendations={recommendations} />

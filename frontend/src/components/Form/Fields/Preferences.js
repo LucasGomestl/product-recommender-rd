@@ -1,5 +1,3 @@
-// Preferences.js
-
 import React, { useState } from 'react';
 import MultiSelectAutocomplete from '../../shared/MultiSelectAutocomplete';
 
