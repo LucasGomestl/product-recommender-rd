@@ -13,9 +13,36 @@ function Features({ features, selectedFeatures = [], onFeatureChange }) {
     onFeatureChange(updatedFeatures);
   };
 
+  const handleSelectAll = () => {
+    const allFeatures = [...features];
+    setCurrentFeatures(allFeatures);
+    onFeatureChange(allFeatures);
+  };
+
+  const handleClearAll = () => {
+    setCurrentFeatures([]);
+    onFeatureChange([]);
+  };
+
   return (
     <div className="mb-4">
       <h2 className="text-lg font-bold mb-2">Funcionalidades:</h2>
+      <div className="flex gap-3 mb-2">
+        <button
+          type="button"
+          onClick={handleSelectAll}
+          className="text-sm text-green-600 hover:underline"
+        >
+          Marcar todos
+        </button>
+        <button
+          type="button"
+          onClick={handleClearAll}
+          className="text-sm text-gray-600 hover:underline"
+        >
+          Limpar tudo
+        </button>
+      </div>
       <ul>
         {features.map((feature, index) => (
           <li key={index} className="mb-2">

@@ -2,7 +2,7 @@ import recommendationService from './recommendation.service';
 import mockProducts from '../mocks/mockProducts';
 
 describe('recommendationService', () => {
-  test('Retorna recomendação correta para SingleProduct com base nas preferências selecionadas', () => {
+  test('should return the correct recommendation for SingleProduct based on selected preferences', () => {
     const formData = {
       selectedPreferences: ['Integração com chatbots'],
       selectedFeatures: ['Chat ao vivo e mensagens automatizadas'],
@@ -18,7 +18,7 @@ describe('recommendationService', () => {
     expect(recommendations[0].name).toBe('RD Conversas');
   });
 
-  test('Retorna recomendações corretas para MultipleProducts com base nas preferências selecionadas', () => {
+  test('should return correct recommendations for MultipleProducts based on selected preferences', () => {
     const formData = {
       selectedPreferences: [
         'Integração fácil com ferramentas de e-mail',
@@ -44,7 +44,7 @@ describe('recommendationService', () => {
     ]);
   });
 
-  test('Retorna apenas um produto para SingleProduct com mais de um produto de match', () => {
+  test('should return only one product for SingleProduct when multiple products match', () => {
     const formData = {
       selectedPreferences: [
         'Integração fácil com ferramentas de e-mail',
@@ -66,7 +66,7 @@ describe('recommendationService', () => {
     expect(recommendations[0].name).toBe('RD Station Marketing');
   });
 
-  test('Retorna o último match em caso de empate para SingleProduct', () => {
+  test('should return the last matching product on tie for SingleProduct', () => {
     const formData = {
       selectedPreferences: ['Automação de marketing', 'Integração com chatbots'],
       selectedRecommendationType: 'SingleProduct',
@@ -79,5 +79,51 @@ describe('recommendationService', () => {
 
     expect(recommendations).toHaveLength(1);
     expect(recommendations[0].name).toBe('RD Conversas');
+  });
+
+  test('should return an empty array when no preference or feature is selected', () => {
+    const formData = {
+      selectedPreferences: [],
+      selectedFeatures: [],
+      selectedRecommendationType: 'MultipleProducts',
+    };
+
+    const recommendations = recommendationService.getRecommendations(
+      formData,
+      mockProducts
+    );
+
+    expect(recommendations).toEqual([]);
+  });
+
+  test('should return an empty array for MultipleProducts when no selection matches any product', () => {
+    const formData = {
+      selectedPreferences: ['Preferência inexistente'],
+      selectedFeatures: ['Funcionalidade inexistente'],
+      selectedRecommendationType: 'MultipleProducts',
+    };
+
+    const recommendations = recommendationService.getRecommendations(
+      formData,
+      mockProducts
+    );
+
+    expect(recommendations).toEqual([]);
+  });
+
+  test('should return the matching product when there is a match only in selectedFeatures', () => {
+    const formData = {
+      selectedPreferences: [],
+      selectedFeatures: ['Gestão de leads e oportunidades'],
+      selectedRecommendationType: 'MultipleProducts',
+    };
+
+    const recommendations = recommendationService.getRecommendations(
+      formData,
+      mockProducts
+    );
+
+    expect(recommendations).toHaveLength(1);
+    expect(recommendations[0].name).toBe('RD Station CRM');
   });
 });

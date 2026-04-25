@@ -1,5 +1,3 @@
-// getRecommendations.js
-
 const getRecommendations = (
   formData = { selectedPreferences: [], selectedFeatures: [] },
   products

@@ -19,9 +19,36 @@ function Preferences({
     onPreferenceChange(updatedPreferences);
   };
 
+  const handleSelectAll = () => {
+    const allPreferences = [...preferences];
+    setCurrentPreferences(allPreferences);
+    onPreferenceChange(allPreferences);
+  };
+
+  const handleClearAll = () => {
+    setCurrentPreferences([]);
+    onPreferenceChange([]);
+  };
+
   return (
     <div className="mb-4">
       <h2 className="text-lg font-bold mb-2">Preferências:</h2>
+      <div className="flex gap-3 mb-2">
+        <button
+          type="button"
+          onClick={handleSelectAll}
+          className="text-sm text-green-600 hover:underline"
+        >
+          Marcar todos
+        </button>
+        <button
+          type="button"
+          onClick={handleClearAll}
+          className="text-sm text-gray-600 hover:underline"
+        >
+          Limpar tudo
+        </button>
+      </div>
       <ul>
         {preferences.map((preference, index) => (
           <li key={index} className="mb-2">
