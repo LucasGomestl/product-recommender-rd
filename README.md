@@ -1,101 +1,113 @@
-# Teste Técnico - Recomendador de Produtos RD Station
+# Recomendador de Produtos RD Station
 
-Este projeto é parte do teste técnico para a vaga de desenvolvedor front-end na RD Station. O objetivo principal é implementar a lógica de recomendação de produtos RD Station em uma aplicação web existente.
+Aplicação React que recomenda produtos da RD Station com base nas preferências e funcionalidades selecionadas pelo usuário em um formulário interativo.
 
-## Missão
+## Preview
 
-Sua missão é desenvolver a funcionalidade central de recomendação de produtos dentro de uma aplicação React.js pré-existente. Você deverá implementar a lógica que permite aos usuários selecionar suas preferências e funcionalidades desejadas, e então receber recomendações de produtos correspondentes.
+| Desktop | Mobile |
+|:---:|:---:|
+| <img src="midia/recomend-desktop.png" width="460" alt="Desktop"> | <img src="midia/recomend-mobile.png" width="220" alt="Mobile"> |
 
-## Contexto
+## Funcionalidades
 
-Este projeto é parte de uma etapa técnica do processo seletivo para a vaga de desenvolvedor front-end na RD Station. A estrutura básica da aplicação já está construída com React.js para o front-end e utiliza json-server para simular um servidor RESTful com dados de produtos.
+- Recomendação em modo **SingleProduct** (produto com maior pontuação; último em caso de empate) e **MultipleProducts** (todos com ao menos 1 ponto)
+- Campo de seleção com **autocomplete e tags** — busca por texto, adiciona/remove itens com mouse ou teclado, sem dependências externas
+- Atalhos **"Marcar todos"** e **"Limpar tudo"** em Preferências e Funcionalidades
+- Feedback de **loading** (botão desabilitado + texto alternativo enquanto a API carrega) e **error** (mensagem visível se a API falhar)
+- Layout **responsivo**: duas colunas no desktop, empilhado no mobile
 
-Seu foco deve ser na implementação da lógica de recomendação e na integração desta funcionalidade com a interface do usuário existente. A aplicação já possui um layout básico utilizando Tailwind CSS.
+## Tecnologias
 
-## Tecnologias Utilizadas
+- React 18
+- Tailwind CSS 3
+- json-server (mock REST API)
+- Lerna 8 (monorepo)
+- Jest + React Testing Library
 
-Este projeto utiliza as seguintes tecnologias principais:
+## Como executar
 
-- React.js: Para o desenvolvimento do front-end
-- json-server: Para simular um servidor RESTful com dados de produtos
-- Tailwind CSS: Para estilização e layout responsivo
+### Pré-requisito
 
-## Requisitos Técnicos
+Node.js >= 18.3. Para instalar com `nvm`:
 
-### Familiaridade com Tailwind CSS
+```bash
+nvm install 18.3
+nvm use 18.3
+```
 
-O layout da aplicação foi desenvolvido utilizando Tailwind CSS. Familiaridade básica com este framework de CSS utilitário será útil para entender e potencialmente modificar o layout existente.
+Ou com `n`:
 
-### Versão do Node.js
+```bash
+npm install -g n
+n 18.3
+```
 
-Este projeto requer Node.js versão 18.3 ou superior. Se você não tem essa versão instalada, siga as instruções abaixo para instalá-la usando `n` ou `nvm`.
+### Passos
 
-#### Usando `n` (Node Version Manager):
+```bash
+# 1. Instalar dependências
+yarn install
 
-1. Instale `n` globalmente (caso ainda não tenha): npm install -g n
+# 2. Iniciar frontend e backend simultaneamente
+yarn dev
+```
 
-2. Instale e use a versão 18.3 do Node.js: n 18.3
+- Frontend: http://localhost:3000
+- Backend (mock API): http://localhost:3001
 
-#### Usando `nvm` (Node Version Manager):
+### Scripts disponíveis
 
-1. Instale `nvm` (caso ainda não tenha) seguindo as instruções em: https://github.com/nvm-sh/nvm
+| Script | Descrição |
+|---|---|
+| `yarn dev` | Inicia frontend + backend juntos |
+| `yarn start:frontend` | Somente a aplicação React |
+| `yarn start:backend` | Somente o json-server |
+| `yarn workspace frontend test` | Executa os testes |
 
-2. Instale e use a versão 18.3 do Node.js: nvm install 18.3 & nvm use 18.3
+## Testes
 
-Após instalar a versão correta do Node.js, você pode prosseguir com a instalação das dependências do projeto e iniciar o desenvolvimento.
+25 testes em 4 suites, todos passando:
 
-## Foco do Desenvolvimento
+| Suite | Testes |
+|---|---|
+| `recommendation.service` | 7 — cobre SingleProduct, MultipleProducts, tie-break, nenhuma seleção, sem correspondência, match apenas em features |
+| `Preferences` | 4 — "Marcar todos" e "Limpar tudo" via callback e via DOM |
+| `Features` | 4 — espelho dos testes de Preferences |
+| `MultiSelectAutocomplete` | 10 — placeholder, abertura, filtro, estado vazio, seleção, tags, remoção, Backspace, Escape, Enter |
 
-Para completar este teste, você deve concentrar-se principalmente em três arquivos específicos:
+```bash
+yarn workspace frontend test
+```
 
-1. `App.js`: Neste componente, você encontrará o comentário "Dadas atualizações no formulário, necessário atualizar a lista de recomendações". Implemente a lógica necessária para atualizar a lista de recomendações com base nas entradas do usuário.
+## Arquitetura
 
-2. `Form.js`: Este componente contém o comentário "Defina aqui a lógica para atualizar as recomendações e passar para a lista de recomendações". Desenvolva a lógica para processar as entradas do usuário e gerar as recomendações apropriadas.
+`App.js` orquestra o estado: chama `useProducts` (fetch + loading/error) e `useRecommendations` (estado das recomendações + `submitForm`), depois injeta tudo como props no `Form`. O `Form` é puramente apresentacional — coleta entrada via `useForm` e delega ao `onSubmit` recebido via prop.
 
-3. `recommendation.service.js`: Neste arquivo de serviço, você verá o comentário "Crie aqui a lógica para retornar os produtos recomendados." Implemente a lógica de negócios para determinar quais produtos devem ser recomendados com base nos critérios fornecidos.
+`recommendation.service.js` usa um mapa de estratégias (`strategies`) para calcular SingleProduct ou MultipleProducts — adicionar um novo tipo exige apenas uma nova entrada no objeto, sem modificar a lógica existente.
 
-## Observações Adicionais
+```
+App
+├── useProducts       → busca API, expõe preferences, features, products, loading, error
+├── useRecommendations → expõe recommendations e submitForm(formData)
+├── Form              → coleta entrada, chama onSubmit(formData)
+│   ├── Preferences / Features  → MultiSelectAutocomplete (custom, sem libs)
+│   └── RecommendationType      → pill-buttons SingleProduct / MultipleProducts
+└── RecommendationList → exibe os produtos retornados
+```
 
-- Sinta-se à vontade para implementar melhorias na cobertura de testes e no layout da aplicação, caso tenha tempo adicional.
-- O código existente serve como base para sua implementação. Concentre-se em desenvolver a funcionalidade de recomendação de produtos conforme especificado nos requisitos do projeto e nos arquivos mencionados acima.
+## Critérios de aceite
 
-## Requisitos
-
-- Implementar a lógica de recomendação de produtos com base nas preferências do usuário.
-- Utilizar React.js para o desenvolvimento do front-end.
-- Consumir a API fornecida pelo json-server para obter os dados dos produtos.
-- Seguir as boas práticas de desenvolvimento e organização de código.
-- Implementar testes unitários para as funcionalidades desenvolvidas.
-
-## Como Executar
-
-1. Clone o repositório: `git clone <URL_DO_REPOSITORIO>`
-2. Instale as dependências: `yarn install`
-3. Para instalar o projeto, execute o script `./install.sh` 
-4. Inicie a aplicação: `yarn start`
-
-### Scripts Disponíveis
-
-- `start`: Inicia a aplicação React em modo de desenvolvimento.
-- `start:frontend`: Inicia apenas a parte frontend da aplicação em modo de desenvolvimento.
-- `start:backend`: Inicia apenas a parte backend da aplicação em modo de desenvolvimento.
-- `dev`: Inicia simultaneamente a parte frontend e backend da aplicação em modo de desenvolvimento.
-
-## Critérios de Aceite
-
-1. O serviço de recomendação de produtos deve ser capaz de receber as preferências e funcionalidades desejadas do usuário através de um formulário.
-2. O serviço deve retornar recomendações de produtos com base nas preferências e funcionalidades selecionadas pelo usuário.
-3. Se o tipo de recomendação selecionado for "SingleProduct", o serviço deve retornar apenas um produto que corresponda melhor às preferências e funcionalidades do usuário.
-4. Se o tipo de recomendação selecionado for "MultipleProducts", o serviço deve retornar uma lista de produtos que correspondam às preferências e funcionalidades do usuário.
-5. Em caso de empate na seleção de produtos com base nas preferências e funcionalidades do usuário, o serviço deve retornar o último produto que atende aos critérios de seleção.
-6. O serviço deve ser capaz de lidar com diferentes tipos de preferências e funcionalidades selecionadas pelo usuário.
-7. O serviço deve ser modular e facilmente extensível para futuras atualizações e adições de funcionalidades.
-
-Certifique-se de que todos os critérios de aceite são atendidos durante o desenvolvimento do projeto.
+- [x] Receber preferências do usuário via formulário
+- [x] Retornar recomendações baseadas nas preferências
+- [x] Modo SingleProduct: retornar o produto com maior pontuação
+- [x] Modo MultipleProducts: retornar lista de produtos com ao menos 1 ponto
+- [x] Em caso de empate, retornar o último produto válido
+- [x] Lidar com diferentes tipos de preferências e funcionalidades
+- [x] Serviço modular e extensível (strategies map, desacoplado da UI)
 
 ## Autor
 
-Desenvolvido por [Seu Nome]
+Lucas Gomes
 
 ## Licença
 
