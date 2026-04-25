@@ -32,22 +32,26 @@ function Preferences({
 
   return (
     <div className="mb-4">
-      <h2 className="text-lg font-bold mb-2">Preferências:</h2>
-      <div className="flex gap-3 mb-2">
-        <button
-          type="button"
-          onClick={handleSelectAll}
-          className="text-sm text-green-600 hover:underline"
-        >
-          Marcar todos
-        </button>
-        <button
-          type="button"
-          onClick={handleClearAll}
-          className="text-sm text-gray-600 hover:underline"
-        >
-          Limpar tudo
-        </button>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          Preferências
+        </h2>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={handleSelectAll}
+            className="text-xs text-gray-500 hover:text-gray-700 hover:underline"
+          >
+            Marcar todos
+          </button>
+          <button
+            type="button"
+            onClick={handleClearAll}
+            className="text-xs text-gray-500 hover:text-gray-700 hover:underline"
+          >
+            Limpar tudo
+          </button>
+        </div>
       </div>
       <ul>
         {preferences.map((preference, index) => (

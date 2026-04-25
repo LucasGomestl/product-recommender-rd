@@ -24,10 +24,7 @@ function Form({ onRecommendationsChange }) {
   };
 
   return (
-    <form
-      className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md"
-      onSubmit={handleSubmit}
-    >
+    <form onSubmit={handleSubmit}>
       <Preferences
         preferences={preferences}
         onPreferenceChange={(selected) =>
@@ -41,6 +38,7 @@ function Form({ onRecommendationsChange }) {
         }
       />
       <RecommendationType
+        selectedRecommendationType={formData.selectedRecommendationType}
         onRecommendationTypeChange={(selected) =>
           handleChange('selectedRecommendationType', selected)
         }

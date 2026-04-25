@@ -10,15 +10,18 @@ function App() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex flex-col justify-center items-center">
-      <h1 className="text-3xl font-bold mb-8">Recomendador de Produtos RD Station</h1>
-      <div className="bg-white p-8 rounded-lg shadow-md w-full md:w-3/4 lg:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="col-span-2 mb-4">
-          <p className="text-lg">
-            Bem-vindo ao Recomendador de Produtos RD Station. Aqui você pode encontrar uma variedade de produtos da RD Station, cada um projetado para atender às necessidades específicas do seu negócio. De CRM a Marketing, de Conversas a Inteligência Artificial, temos uma solução para ajudar você a alcançar seus objetivos. Use o formulário abaixo para selecionar suas preferências e funcionalidades desejadas e receba recomendações personalizadas de produtos que melhor atendam às suas necessidades.
+    <div className="bg-gray-100 min-h-screen py-6 px-4 flex flex-col items-center">
+      <div className="bg-white p-4 md:p-8 rounded-lg shadow-md w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <div className="col-span-1 md:col-span-2 border-b border-gray-100 pb-4 md:pb-6">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-1">
+            Recomendador de Produtos RD Station
+          </h1>
+          <p className="text-sm text-gray-500">
+            Selecione suas preferências e funcionalidades para receber
+            recomendações personalizadas dos produtos RD Station.
           </p>
         </div>
-        <div>
+        <div className="border-b border-gray-100 pb-6 md:border-b-0 md:pb-0 md:border-r md:pr-8">
           <Form onRecommendationsChange={handleRecommendationsChange} />
         </div>
         <div>
