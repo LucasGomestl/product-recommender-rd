@@ -2,6 +2,8 @@
 
 Aplicação React que recomenda produtos da RD Station com base nas preferências e funcionalidades selecionadas pelo usuário em um formulário interativo.
 
+**Demo:** https://product-recommender-rd-livid.vercel.app/
+
 ## Preview
 
 | Desktop | Mobile |
